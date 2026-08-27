@@ -1,0 +1,10 @@
+{
+  "port": 3199,
+  "pollMs": 1000,
+  "staleAfterMs": 10000,
+  "mode": "demo",
+  "gameId": "84908",
+  "dataUrl": "",
+  "requestHeaders": {},
+  "teams": {"away":{"short":"AWAY","color":"#1565c0"},"home":{"short":"HOME","color":"#c62828"}}
+}

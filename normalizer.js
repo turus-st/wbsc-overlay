@@ -1,0 +1,16 @@
+const first=(o,paths,fallback=null)=>{for(const p of paths){let v=p.split('.').reduce((a,k)=>a?.[k],o);if(v!==undefined&&v!==null)return v}return fallback};
+const n=v=>Number.isFinite(+v)?+v:0; const arr=v=>Array.isArray(v)?v:[];
+const player=p=>({id:first(p,['id','playerId','person.id'],''),number:first(p,['number','jerseyNumber','uniformNumber'],''),name:first(p,['displayName','name','fullName','person.displayName'],'Player'),position:first(p,['position','position.code','fieldingPosition'],'-'),avg:first(p,['avg','battingAverage','stats.avg'],'-'),ops:first(p,['ops','stats.ops'],'-')});
+export function normalizeGame(raw,cfg={}){
+ const g=first(raw,['game','data.game','data'],raw)||{}; const situation=first(g,['situation','live.situation','currentSituation'],{}); const score=first(g,['score','live.score'],{});
+ const awayObj=first(g,['awayTeam','teams.away','visitorTeam'],{}), homeObj=first(g,['homeTeam','teams.home'],{});
+ const innings=arr(first(g,['innings','score.innings','linescore.innings'],[])).map((x,i)=>({inning:n(first(x,['inning','number'],i+1)),away:n(first(x,['away','awayRuns','visitor'],0)),home:n(first(x,['home','homeRuns'],0))}));
+ const lineupRoot=first(g,['lineups','rosters','live.lineups'],{});
+ const bases=first(situation,['bases','runners'],{});
+ return {gameId:first(g,['id','gameId'],cfg.gameId||''),status:first(g,['status','gameStatus','state'],'LIVE'),
+  teams:{away:{name:first(awayObj,['name','displayName'],cfg.teams?.away?.short||'AWAY'),short:first(awayObj,['shortName','abbreviation'],cfg.teams?.away?.short||'AWAY'),color:cfg.teams?.away?.color||'#1565c0',logo:first(awayObj,['logo','logoUrl'],'')},home:{name:first(homeObj,['name','displayName'],cfg.teams?.home?.short||'HOME'),short:first(homeObj,['shortName','abbreviation'],cfg.teams?.home?.short||'HOME'),color:cfg.teams?.home?.color||'#c62828',logo:first(homeObj,['logo','logoUrl'],'')}},
+  score:{away:n(first(score,['away','awayRuns','visitor'],first(g,['awayScore'],0))),home:n(first(score,['home','homeRuns'],first(g,['homeScore'],0))),hitsAway:n(first(score,['awayHits'],0)),hitsHome:n(first(score,['homeHits'],0)),errorsAway:n(first(score,['awayErrors'],0)),errorsHome:n(first(score,['homeErrors'],0)),innings},
+  situation:{inning:n(first(situation,['inning','inningNumber'],first(g,['inning'],1))),half:String(first(situation,['half','inningHalf'],first(g,['inningHalf'],'TOP'))).toUpperCase(),balls:n(first(situation,['balls','count.balls'],0)),strikes:n(first(situation,['strikes','count.strikes'],0)),outs:n(first(situation,['outs'],0)),bases:{first:!!first(bases,['first','1','firstBase'],false),second:!!first(bases,['second','2','secondBase'],false),third:!!first(bases,['third','3','thirdBase'],false)},batter:player(first(situation,['batter','currentBatter'],{})),pitcher:player(first(situation,['pitcher','currentPitcher'],{})),lastPlay:first(g,['lastPlay.description','plays.0.description','playByPlay.0.description'],'')},
+  lineups:{away:arr(first(lineupRoot,['away','visitor'],first(awayObj,['lineup','players'],[]))).map(player),home:arr(first(lineupRoot,['home'],first(homeObj,['lineup','players'],[]))).map(player)},
+  stats:{away:first(g,['stats.away','teamStats.away'],{}),home:first(g,['stats.home','teamStats.home'],{})},meta:{normalizedAt:new Date().toISOString()}};
+}

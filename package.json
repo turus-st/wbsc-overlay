@@ -1,0 +1,6 @@
+{
+  "name":"wbsc-obs-overlays","version":"1.0.0","private":true,"type":"module",
+  "description":"Browser overlays for OBS fed by configurable WBSC Game Data / Ballclubz live JSON",
+  "scripts":{"start":"node server.js","dev":"node --watch server.js","test":"node --test"},
+  "engines":{"node":">=20"},"dependencies":{"express":"^5.1.0"}
+}
