@@ -1,3 +1,0 @@
-export const qs=new URLSearchParams(location.search); export const el=id=>document.getElementById(id); export const text=(id,v)=>{const x=el(id);if(x)x.textContent=v??'-'};
-export function connect(render){const es=new EventSource('/events'); es.addEventListener('game',e=>{const s=JSON.parse(e.data); el('error')?.classList.toggle('hidden',!s.meta?.error); if(el('error'))el('error').textContent=s.meta?.error||''; render(s); document.body.classList.remove('animate');void document.body.offsetWidth;document.body.classList.add('animate')}); es.onerror=()=>{if(el('error')){el('error').textContent='Data connection lost';el('error').classList.remove('hidden')}}}
-export const img=(id,url)=>{const x=el(id);if(x){x.src=url||'';x.classList.toggle('hidden',!url)}};
