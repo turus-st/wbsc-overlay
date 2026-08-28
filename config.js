@@ -1,5 +1,5 @@
 window.WBSC_CONFIG = {
-  gameId: '204415',
+  gameId: '207364',
   refreshMs: 1000,
   backgroundImage: '',
   showPoweredBy: false
