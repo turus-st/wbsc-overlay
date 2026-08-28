@@ -1,1 +1,0 @@
-{"port":3199,"pollMs":1000,"staleAfterMs":10000,"mode":"live","gameId":"84908","dataUrl":"PASTE_AUTHORIZED_JSON_URL_WITH_{gameId}_HERE","requestHeaders":{},"teams":{"away":{"short":"AWAY","color":"#1565c0"},"home":{"short":"HOME","color":"#c62828"}}}
